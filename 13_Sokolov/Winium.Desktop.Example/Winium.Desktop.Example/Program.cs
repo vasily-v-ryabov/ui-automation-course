@@ -33,10 +33,10 @@ namespace Winium.Desktop.Example
         private static CruciatusElement OpenChrome(string testPageAddress)
         {
             var chr = new Cruciatus.Application(@"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe");
-            chr.Start("--force-renderer-accessibility --start-maximized --app=" + testPageAddress);
+            chr.Start("--force-renderer-accessibility --start-maximized --incognito --app=" + testPageAddress);
             Thread.Sleep(3000);
 
-            var chromeFinder = By.Name("Яндекс.Диск").AndType(ControlType.Window);
+            var chromeFinder = By.Name("Яндекс.Диск (инкогнито)").AndType(ControlType.Window);
             var chrome = Cruciatus.CruciatusFactory.Root.FindElement(chromeFinder);
             Thread.Sleep(100);
 
@@ -66,6 +66,11 @@ namespace Winium.Desktop.Example
             } catch (Exception) { Console.WriteLine("Logged"); }
             #endregion
 
+            #region Close helpers
+            // Сохранить пароль?
+            try { chrome.FindElementByName("Нет").SetText(login); Thread.Sleep(100); } catch (Exception) { }
+            #endregion
+
             return chrome;
         }
 
@@ -80,7 +85,8 @@ namespace Winium.Desktop.Example
 
             mouseMove(explorer.FindElementByUid("TitleBar"), 1300, 100);
 
-            explorer.FindElementByUid("1001").SetText(defaultFolder);
+            explorer.FindElementByName("All locations").SetText(defaultFolder);
+            //explorer.FindElementByUid("1001").SetText(defaultFolder);
             Cruciatus.CruciatusFactory.Keyboard.SendText("{ENTER}");
 
             mouseMove(explorer.FindElementByName(fileName), 100, 384);
