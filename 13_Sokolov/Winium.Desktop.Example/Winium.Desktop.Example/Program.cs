@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Windows.Automation;
 using System.Windows.Forms;
@@ -9,7 +10,7 @@ namespace Winium.Desktop.Example
 {
     class Program
     {
-        private static string defaultFolder = @"W:\Education\02_ВУЗ\2014-2016_Магистр_ВМК\4_семестр\python";
+        private static string defaultFolder = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
         private static string testPageAddress = "https://disk.yandex.ru/";
         private static string fileName = "test.zip";
 
@@ -33,20 +34,12 @@ namespace Winium.Desktop.Example
         private static CruciatusElement OpenChrome(string testPageAddress)
         {
             var chr = new Cruciatus.Application(@"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe");
-            chr.Start("--force-renderer-accessibility --start-maximized --incognito --app=" + testPageAddress);
+            chr.Start("--force-renderer-accessibility --start-maximized --app=" + testPageAddress);
             Thread.Sleep(3000);
 
-            var chromeFinder = By.Name("Яндекс.Диск (инкогнито)").AndType(ControlType.Window);
+            var chromeFinder = By.Name("Яндекс.Диск").AndType(ControlType.Window);
             var chrome = Cruciatus.CruciatusFactory.Root.FindElement(chromeFinder);
             Thread.Sleep(100);
-
-            // --start-maximized
-            // mouseMove(chrome.FindElementByUid("TitleBar"), 1366 / 2, 0);
-
-            // --app=" + testPageAddress
-            //var address = chrome.FindElementByName("Адресная строка и строка поиска");
-            //address.SetText(testPageAddress); Thread.Sleep(100);
-            //Cruciatus.CruciatusFactory.Keyboard.SendText("{ENTER}"); Thread.Sleep(100);
 
             #region Login
             try
@@ -55,7 +48,18 @@ namespace Winium.Desktop.Example
                 {
                     try
                     {
-                        chrome.FindElementByName("Логин").SetText(login); Thread.Sleep(100);
+                        CruciatusElement ce = chrome.FindElementByName("Логин");
+                        while (!ce.Text().Equals("Логин"))
+                        {
+                            ce.Click();
+                            String backspace = "{BACKSPACE}";
+                            String delete = "{DELETE}";
+                            String clearstr = "";
+                            for (int i = 0; i < ce.Text().Length; i++) clearstr += backspace + delete;
+
+                            Cruciatus.CruciatusFactory.Keyboard.SendText(clearstr);
+                        }
+                        ce.SetText(login); Thread.Sleep(100);
                         break;
                     }
                     catch (Exception) { }
@@ -67,8 +71,11 @@ namespace Winium.Desktop.Example
             #endregion
 
             #region Close helpers
+            // Cruciatus.CruciatusFactory.Settings.SearchTimeout = 1000;
             // Сохранить пароль?
-            try { chrome.FindElementByName("Нет").SetText(login); Thread.Sleep(100); } catch (Exception) { }
+            try { chrome.FindElementByName("Нет").Click(); Thread.Sleep(100); } catch (Exception) { }
+            // Установите яндекс диск на свой комп
+            // try { chrome.FindElementByName("Имя ").Click(); Thread.Sleep(100); } catch (Exception) { }
             #endregion
 
             return chrome;
@@ -77,19 +84,16 @@ namespace Winium.Desktop.Example
         private static void OpenExplorerInFolder(string defaultFolder)
         {
             var expl = new Cruciatus.Application(@"C:\Windows\explorer.exe");
-            expl.Start();
+            expl.Start(defaultFolder);
             Thread.Sleep(3000);
 
-            var winFinder = By.Name("File Explorer").AndType(ControlType.Window);
+            var winFinder = By.Name("Winium.Desktop.Example").AndType(ControlType.Window);
             var explorer = Cruciatus.CruciatusFactory.Root.FindElement(winFinder);
 
             mouseMove(explorer.FindElementByUid("TitleBar"), 1300, 100);
 
-            explorer.FindElementByName("All locations").SetText(defaultFolder);
-            //explorer.FindElementByUid("1001").SetText(defaultFolder);
-            Cruciatus.CruciatusFactory.Keyboard.SendText("{ENTER}");
-
-            mouseMove(explorer.FindElementByName(fileName), 100, 384);
+            CruciatusElement items = explorer.FindElementByName("Items View");
+            mouseMove(items.FindElementByName(fileName), 100, 384);
         }
 
         private static void mouseMove(CruciatusElement ci, double x1, double y1)
