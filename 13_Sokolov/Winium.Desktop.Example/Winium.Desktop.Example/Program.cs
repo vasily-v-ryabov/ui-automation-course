@@ -19,6 +19,12 @@ namespace Winium.Desktop.Example
         private static string password = "Qwerty123";
         #endregion
 
+        /// <summary>
+        /// Before run:
+        /// 1) If you have 'test.zip' in https://disk.yandex.ru/ test account - remove it.
+        /// 2) Log out from all accounts from https://disk.yandex.ru/
+        /// 3) Close all google chrome windows
+        /// </summary>
         static void Main(string[] args)
         {
             var chrome = OpenChrome(testPageAddress);
