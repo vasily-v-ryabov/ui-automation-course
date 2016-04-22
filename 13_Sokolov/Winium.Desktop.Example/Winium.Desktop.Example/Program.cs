@@ -35,12 +35,18 @@ namespace Winium.Desktop.Example
                 Thread.Sleep(100);
             }
             MessageBox.Show("Загрузка завершена");
+
+            Thread.Sleep(1000);
+            chrome.SetFocus();
+            Thread.Sleep(1000);
+            chrome.FindElementByName("System").DoubleClick();
         }
 
+        private static Cruciatus.Application chromeWindow = null;
         private static CruciatusElement OpenChrome(string testPageAddress)
         {
-            var chr = new Cruciatus.Application(@"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe");
-            chr.Start("--force-renderer-accessibility --start-maximized --app=" + testPageAddress);
+            var chromeWindow = new Cruciatus.Application(@"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe");
+            chromeWindow.Start("--force-renderer-accessibility --start-maximized --app=" + testPageAddress);
             Thread.Sleep(3000);
 
             var chromeFinder = By.Name("Яндекс.Диск").AndType(ControlType.Window);
@@ -89,9 +95,9 @@ namespace Winium.Desktop.Example
 
         private static void OpenExplorerInFolder(string defaultFolder)
         {
-            var expl = new Cruciatus.Application(@"C:\Windows\explorer.exe");
+            Cruciatus.Application expl = new Cruciatus.Application(@"C:\Windows\explorer.exe");
             expl.Start(defaultFolder);
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
 
             var winFinder = By.Name("Winium.Desktop.Example").AndType(ControlType.Window);
             var explorer = Cruciatus.CruciatusFactory.Root.FindElement(winFinder);
@@ -100,6 +106,11 @@ namespace Winium.Desktop.Example
 
             CruciatusElement items = explorer.FindElementByName("Items View");
             mouseMove(items.FindElementByName(fileName), 100, 384);
+            Thread.Sleep(1000);
+
+            explorer.SetFocus();
+            Thread.Sleep(1000);
+            explorer.FindElementByName("System").DoubleClick();
         }
 
         private static void mouseMove(CruciatusElement ci, double x1, double y1)

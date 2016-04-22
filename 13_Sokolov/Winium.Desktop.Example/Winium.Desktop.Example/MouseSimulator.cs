@@ -3,6 +3,14 @@ using System.Runtime.InteropServices;
 
 namespace Winium.Desktop.Example
 {
+    /// <summary>
+    /// Эмулирует нажатие кнопок мыши
+    /// <para>
+    /// Основа класса взята отсюда:
+    /// http://stackoverflow.com/questions/23264529/webbrowser-contextmenu-run-action-of-menu-item/24356875#24356875
+    /// и доработана. Добавлены методы LeftMouseButtonDown(), LeftMouseButtonUp().
+    /// </para>
+    /// </summary>
     public class MouseSimulator
     {
         [DllImport("user32.dll", SetLastError = true)]
