@@ -83,10 +83,9 @@ namespace Winium.Desktop.Example
             #endregion
 
             #region Close helpers
-            // Cruciatus.CruciatusFactory.Settings.SearchTimeout = 1000;
-            // Сохранить пароль?
+            // Save password?
             try { chrome.FindElementByName("Нет").Click(); Thread.Sleep(100); } catch (Exception) { }
-            // Установите яндекс диск на свой комп
+            // Install yandex disk on your computer
             // try { chrome.FindElementByName("Имя ").Click(); Thread.Sleep(100); } catch (Exception) { }
             #endregion
 
