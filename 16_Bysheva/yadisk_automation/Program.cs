@@ -58,7 +58,10 @@ namespace yadisk_automation
                 YadiskActions.Login(browserWindow, LOGIN, Password);
 
                 //ChooseFile(browserWindow, filePath);
-                YadiskActions.DragFileFromExplorer(filePath, ElementFinder.TryFindElement(browserWindow, "последние файлы", "text", YadiskActions.DefaultTimeout).Current.BoundingRectangle.TopLeft);
+                //YadiskActions.DragFileFromExplorer(filePath, ElementFinder.TryFindElement(browserWindow, "последние файлы", "text", YadiskActions.DefaultTimeout).Current.BoundingRectangle.TopLeft);
+                var point = browserWindow.Current.BoundingRectangle.TopLeft;
+                point.Offset(100, 100);
+                YadiskActions.DragFileFromExplorer(filePath, point); 
 
                 YadiskActions.MonitorDownload(browserWindow);
             }
