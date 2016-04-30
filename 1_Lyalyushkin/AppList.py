@@ -17,19 +17,19 @@ CGWindowListCopyWindowInfo = quartz.CGWindowListCopyWindowInfo
 CGWindowListCopyWindowInfo.restype = CFArrayRef
 CGWindowListCopyWindowInfo.argtypes = [ctypes.c_uint32, ctypes.c_uint32]
 
-def getStringDictValue(dictionary, key):
-    cfString = CoreFoundation.CFDictionaryGetValue(dictionary, unicode_to_cfstring(key))
-    return cfstring_to_unicode(cfString);
+def get_string_dict_value(dictionary, key):
+    cf_string = CoreFoundation.CFDictionaryGetValue(dictionary, unicode_to_cfstring(key))
+    return cfstring_to_unicode(cf_string);
 
-def getIntDictValue(dictionary, key):
-    nsNumber = CoreFoundation.CFDictionaryGetValue(dictionary, unicode_to_cfstring(key))
-    return objc.objc_msgSend(nsNumber, objc.sel_registerName('intValue'))
+def get_int_dict_value(dictionary, key):
+    ns_number = CoreFoundation.CFDictionaryGetValue(dictionary, unicode_to_cfstring(key))
+    return objc.objc_msgSend(ns_number, objc.sel_registerName('intValue'))
 
-def getStringProperty(obj, propertyName):
+def get_string_property(obj, property_name):
     result = 'None'
-    nsString = objc.objc_msgSend(obj, objc.sel_registerName(propertyName))
-    if nsString is not None:
-        result = ctypes.string_at(objc.objc_msgSend(nsString, objc.sel_registerName('UTF8String')))
+    ns_string = objc.objc_msgSend(obj, objc.sel_registerName(property_name))
+    if ns_string is not None:
+        result = ctypes.string_at(objc.objc_msgSend(ns_string, objc.sel_registerName('UTF8String')))
     return result
 
 def main():
@@ -40,46 +40,46 @@ def main():
     NSWorkspace = objc.objc_getClass('NSWorkspace')
     workspace = objc.objc_msgSend(NSWorkspace, objc.sel_registerName('sharedWorkspace'))
 
-    runningApps = objc.objc_msgSend(workspace,objc.sel_registerName('runningApplications'))
-    appCount = objc.objc_msgSend(runningApps, objc.sel_registerName('count'))
+    running_apps = objc.objc_msgSend(workspace,objc.sel_registerName('runningApplications'))
+    app_count = objc.objc_msgSend(running_apps, objc.sel_registerName('count'))
 
-    allWindowsList = CGWindowListCopyWindowInfo(0, 0)
-    allWindowsCount = CoreFoundation.CFArrayGetCount(allWindowsList)
+    all_windows_list = CGWindowListCopyWindowInfo(0, 0)
+    all_windows_count = CoreFoundation.CFArrayGetCount(all_windows_list)
 
-    onScreenWindowsList = CGWindowListCopyWindowInfo((1 << 0),0)
-    onScreenWindowsCount = CoreFoundation.CFArrayGetCount(onScreenWindowsList)
+    on_screen_windows_list = CGWindowListCopyWindowInfo((1 << 0),0)
+    on_screen_windows_count = CoreFoundation.CFArrayGetCount(on_screen_windows_list)
 
-    for appIndex in range(appCount):
-        app = objc.objc_msgSend(runningApps, objc.sel_registerName('objectAtIndex:'), appIndex)
+    for app_index in range(app_count):
+        app = objc.objc_msgSend(running_apps, objc.sel_registerName('objectAtIndex:'), app_index)
 
-        bid = getStringProperty(app, 'bundleIdentifier')
+        bid = get_string_property(app, 'bundleIdentifier')
         pid = objc.objc_msgSend(app, objc.sel_registerName('processIdentifier'))
 
         print("{}: {}".format(bid, pid))
 
-        for allWindowIndex in range(allWindowsCount):
-            window = CoreFoundation.CFArrayGetValueAtIndex(allWindowsList, allWindowIndex)
+        for all_windows_index in range(all_windows_count):
+            window = CoreFoundation.CFArrayGetValueAtIndex(all_windows_list, all_windows_index)
 
-            localizedName = getStringProperty(app, 'localizedName')
-            windowOwnerName = getStringDictValue(window, 'kCGWindowOwnerName')
+            localized_name = get_string_property(app, 'localizedName')
+            window_owner_name = get_string_dict_value(window, 'kCGWindowOwnerName')
 
-            if windowOwnerName == localizedName:
-                isHidden = True
-                windowNum = 0
-                for onScreenWindowsIndex in range(onScreenWindowsCount):
-                    onScreenWindow = CoreFoundation.CFArrayGetValueAtIndex(onScreenWindowsList, onScreenWindowsIndex)
+            if window_owner_name == localized_name:
+                is_hidden = True
+                window_num = 0
+                for on_screen_windows_index in range(on_screen_windows_count):
+                    on_screen_window = CoreFoundation.CFArrayGetValueAtIndex(on_screen_windows_list, on_screen_windows_index)
 
-                    onScreenWindowNum = getIntDictValue(onScreenWindow, 'kCGWindowNumber')
-                    windowNum = getIntDictValue(window, 'kCGWindowNumber')
+                    on_screen_window_num = get_int_dict_value(on_screen_window, 'kCGWindowNumber')
+                    window_num = get_int_dict_value(window, 'kCGWindowNumber')
 
-                    if onScreenWindowNum == windowNum:
-                        isHidden =False
+                    if on_screen_window_num == window_num:
+                        is_hidden =False
                         break
-                windowName = getStringDictValue(window, 'kCGWindowName')
+                window_name = get_string_dict_value(window, 'kCGWindowName')
                 print("     '{}':{}:{}".format(
-                    windowName,
-                    windowNum,
-                    'hidden' if isHidden else 'maximized'))
+                    window_name,
+                    window_num,
+                    'hidden' if is_hidden else 'maximized'))
 
     objc.objc_msgSend(pool, objc.sel_registerName('release'))
 
