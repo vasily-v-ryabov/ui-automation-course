@@ -37,7 +37,8 @@ CoreFoundation.CFArrayGetValueAtIndex.restype = CFTypeRef
 CoreFoundation.CFDictionaryGetValue.restype = CFStringRef
 CoreFoundation.CFDictionaryGetValue.argtypes = [CFDictionaryRef, CFStringRef]
 
-kCFStringEncodingUTF8 = CFStringEncoding(0x08000100)
+K_CF_STRING_ENCODING_UTF8 = 0x08000100
+kCFStringEncodingUTF8 = CFStringEncoding(K_CF_STRING_ENCODING_UTF8)
 setattr(CoreFoundation, 'kCFAllocatorDefault', CFAllocatorRef.in_dll(CoreFoundation, 'kCFAllocatorDefault'))
 setattr(CoreFoundation, 'CFIndex', CFIndex)
 setattr(CoreFoundation, 'CFStringRef', CFStringRef)
