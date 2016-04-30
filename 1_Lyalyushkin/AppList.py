@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import ctypes
 import ctypes.util
 
@@ -53,7 +55,7 @@ def main():
         bid = getStringProperty(app, 'bundleIdentifier')
         pid = objc.objc_msgSend(app, objc.sel_registerName('processIdentifier'))
 
-        print "{}: {}".format(bid, pid)
+        print("{}: {}".format(bid, pid))
 
         for allWindowIndex in range(allWindowsCount):
             window = CoreFoundation.CFArrayGetValueAtIndex(allWindowsList, allWindowIndex)
@@ -74,10 +76,10 @@ def main():
                         isHidden =False
                         break
                 windowName = getStringDictValue(window, 'kCGWindowName')
-                print "     '{}':{}:{}".format(
+                print("     '{}':{}:{}".format(
                     windowName,
                     windowNum,
-                    'hidden' if isHidden else 'maximized')
+                    'hidden' if isHidden else 'maximized'))
 
     objc.objc_msgSend(pool, objc.sel_registerName('release'))
 

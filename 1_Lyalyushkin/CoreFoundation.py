@@ -2,7 +2,6 @@ import ctypes
 from ctypes.util import find_library
 from ctypes import c_void_p, c_char_p, c_uint32, POINTER, c_long
 
-cf_path = find_library('CoreFoundation')
 CoreFoundation = ctypes.cdll.LoadLibrary(ctypes.util.find_library('CoreFoundation'))
 
 CFIndex = c_long
