@@ -3,6 +3,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Windows.Automation;
 using System.IO;
+using System.Windows.Forms;
 
 namespace yadisk_automation
 {
@@ -45,6 +46,7 @@ namespace yadisk_automation
             try
             {
                 browserWindow = AutomationElement.FromHandle(browserProcess.MainWindowHandle);
+                Utilities.PressWinAnd(Keys.Left);
             }
             catch (InvalidOperationException)
             {
@@ -57,11 +59,7 @@ namespace yadisk_automation
             {
                 YadiskActions.Login(browserWindow, LOGIN, Password);
 
-                //ChooseFile(browserWindow, filePath);
-                //YadiskActions.DragFileFromExplorer(filePath, ElementFinder.TryFindElement(browserWindow, "последние файлы", "text", YadiskActions.DefaultTimeout).Current.BoundingRectangle.TopLeft);
-                var point = browserWindow.Current.BoundingRectangle.TopLeft;
-                point.Offset(100, 100);
-                YadiskActions.DragFileFromExplorer(filePath, point); 
+                YadiskActions.DragFileFromExplorer(filePath, ElementFinder.TryFindElement(browserWindow, "Загрузить файлы", "text", YadiskActions.DefaultTimeout).Current.BoundingRectangle.TopLeft);
 
                 YadiskActions.MonitorDownload(browserWindow);
             }

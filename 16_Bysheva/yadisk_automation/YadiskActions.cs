@@ -60,6 +60,7 @@ namespace yadisk_automation
             try
             {
                 explorerWindow = ElementFinder.TryFindElement(AutomationElement.RootElement, Utilities.GetExplorerWindowTitle(filePath), "window", DefaultTimeout);
+                Utilities.PressWinAnd(Keys.Right);
 
                 ElementActions.InsertText(ElementFinder.TryFindElement(explorerWindow, "search box", "edit", DefaultTimeout), Path.GetFileName(filePath));
                 Thread.Sleep(1000);

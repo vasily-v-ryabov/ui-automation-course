@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Automation;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace yadisk_automation
 {
@@ -10,6 +12,33 @@ namespace yadisk_automation
     {
         public class CannotOpenExplorerException : Exception
         { }
+
+        static private class KeyboardSend
+        {
+            [DllImport("user32.dll")]
+            private static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
+
+            private const int KEYEVENTF_EXTENDEDKEY = 1;
+            private const int KEYEVENTF_KEYUP = 2;
+
+            public static void KeyDown(Keys vKey)
+            {
+                keybd_event((byte)vKey, 0, KEYEVENTF_EXTENDEDKEY, 0);
+            }
+
+            public static void KeyUp(Keys vKey)
+            {
+                keybd_event((byte)vKey, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+            }
+        }
+
+        public static void PressWinAnd(Keys key) 
+        {
+            KeyboardSend.KeyDown(Keys.LWin);
+            KeyboardSend.KeyDown(key);
+            KeyboardSend.KeyUp(key);
+            KeyboardSend.KeyUp(Keys.LWin);
+        }
 
         public static void RecursiveGoRound(AutomationElement parent, TreeScope treeScope, int recursionLevel = 0)
         {
