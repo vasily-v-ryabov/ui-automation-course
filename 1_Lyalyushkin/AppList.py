@@ -3,7 +3,7 @@ from __future__ import print_function
 import ctypes
 import ctypes.util
 
-from CoreFoundation import *
+from CoreFoundation import CFArrayRef, CoreFoundation, unicode_to_cfstring, cfstring_to_unicode
 
 objc = ctypes.cdll.LoadLibrary(ctypes.util.find_library('objc'))
 quartz = ctypes.cdll.LoadLibrary(ctypes.util.find_library('Quartz'))
