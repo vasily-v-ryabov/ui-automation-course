@@ -66,7 +66,9 @@ namespace yadisk_automation
                 Thread.Sleep(1000);
                 var file = ElementFinder.TryFindElement(explorerWindow, Path.GetFileName(filePath), "list item", DefaultTimeout);
 
-                ElementActions.DragDrop(file.Current.BoundingRectangle.TopLeft, dropTarget);
+                var filePoint = file.Current.BoundingRectangle.TopLeft;
+                filePoint.Offset(file.Current.BoundingRectangle.Width/2, file.Current.BoundingRectangle.Height/2);
+                ElementActions.DragDrop(filePoint, dropTarget);
 
                 ElementActions.ClickElement(ElementFinder.TryFindElement(explorerWindow, "close", "button", DefaultTimeout));
             }

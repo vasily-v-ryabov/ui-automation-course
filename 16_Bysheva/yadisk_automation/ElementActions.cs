@@ -59,11 +59,14 @@ namespace yadisk_automation
             var from = Utilities.ConvertPoint(_from);
             var to = Utilities.ConvertPoint(_to);
 
-            @from.Offset(25, 25);
+            //@from.Offset(25, 25);
             to.Offset(25, 25);
-
+            
             Cursor.Position = @from;
             Console.WriteLine(string.Format("Cursor is set to {0} {1}", @from.X, @from.Y));
+
+            mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, new IntPtr());
+            mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, new IntPtr());
 
             Thread.Sleep(1000);
             mouse_event(MOUSEEVENTF_LEFTDOWN, 0, 0, 0, new IntPtr());
