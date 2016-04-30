@@ -72,10 +72,14 @@ namespace yadisk_automation
 
             Cursor.Position = to;
             Console.WriteLine(string.Format("Cursor is set to {0} {1}", to.X, to.Y));
-            Thread.Sleep(200);
-            to.Offset(5,5);
-            Cursor.Position = to;
-            Console.WriteLine(string.Format("Cursor is set to {0} {1}", to.X, to.Y));
+
+            for (int i = 0; i < 5; i++)
+            {
+                Thread.Sleep(200);
+                to.Offset(5, 5);
+                Cursor.Position = to;
+                Console.WriteLine(string.Format("Cursor is set to {0} {1}", to.X, to.Y));
+            }
             Thread.Sleep(3000);
 
             mouse_event(MOUSEEVENTF_LEFTUP, 0, 0, 0, new IntPtr());
