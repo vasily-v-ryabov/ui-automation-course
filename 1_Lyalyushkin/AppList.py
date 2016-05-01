@@ -1,87 +1,72 @@
 from __future__ import print_function
 
-import ctypes
-import ctypes.util
+from ObjcBindings import Objc, CoreFoundation, Quartz
+from ObjcConstants import kCGNullWindowID, kCGWindowListOptionAll, kCGWindowListOptionOnScreenOnly
 
-from CoreFoundation import CFArrayRef, CoreFoundation, unicode_to_cfstring, cfstring_to_unicode
-
-objc = ctypes.cdll.LoadLibrary(ctypes.util.find_library('objc'))
-quartz = ctypes.cdll.LoadLibrary(ctypes.util.find_library('Quartz'))
-
-objc.objc_getClass.restype = ctypes.c_void_p
-objc.sel_registerName.restype = ctypes.c_void_p
-objc.objc_msgSend.restype = ctypes.c_void_p
-objc.objc_msgSend.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
-
-CGWindowListCopyWindowInfo = quartz.CGWindowListCopyWindowInfo
-CGWindowListCopyWindowInfo.restype = CFArrayRef
-CGWindowListCopyWindowInfo.argtypes = [ctypes.c_uint32, ctypes.c_uint32]
-
-def get_string_dict_value(dictionary, key):
-    cf_string = CoreFoundation.CFDictionaryGetValue(dictionary, unicode_to_cfstring(key))
-    return cfstring_to_unicode(cf_string);
-
-def get_int_dict_value(dictionary, key):
-    ns_number = CoreFoundation.CFDictionaryGetValue(dictionary, unicode_to_cfstring(key))
-    return objc.objc_msgSend(ns_number, objc.sel_registerName('intValue'))
-
-def get_string_property(obj, property_name):
-    result = 'None'
-    ns_string = objc.objc_msgSend(obj, objc.sel_registerName(property_name))
-    if ns_string is not None:
-        result = ctypes.string_at(objc.objc_msgSend(ns_string, objc.sel_registerName('UTF8String')))
-    return result
 
 def main():
-    NSAutoreleasePool = objc.objc_getClass('NSAutoreleasePool')
-    pool = objc.objc_msgSend(NSAutoreleasePool, objc.sel_registerName('alloc'))
-    pool = objc.objc_msgSend(pool, objc.sel_registerName('init'))
+    objc = Objc()
+    quartz = Quartz()
+    cf = CoreFoundation()
 
-    NSWorkspace = objc.objc_getClass('NSWorkspace')
-    workspace = objc.objc_msgSend(NSWorkspace, objc.sel_registerName('sharedWorkspace'))
+    ns_auto_release_pool = objc.get_class('NSAutoreleasePool')
+    pool = objc.call_selector(ns_auto_release_pool, 'alloc')
+    pool = objc.call_selector(pool, 'init')
 
-    running_apps = objc.objc_msgSend(workspace,objc.sel_registerName('runningApplications'))
-    app_count = objc.objc_msgSend(running_apps, objc.sel_registerName('count'))
+    ns_workspace = objc.get_class('NSWorkspace')
+    workspace = objc.call_selector(ns_workspace, 'sharedWorkspace')
 
-    all_windows_list = CGWindowListCopyWindowInfo(0, 0)
-    all_windows_count = CoreFoundation.CFArrayGetCount(all_windows_list)
+    running_apps = objc.call_selector(workspace, 'runningApplications')
+    app_count = objc.call_selector(running_apps, 'count')
 
-    on_screen_windows_list = CGWindowListCopyWindowInfo((1 << 0),0)
-    on_screen_windows_count = CoreFoundation.CFArrayGetCount(on_screen_windows_list)
+    all_windows_list = quartz.cg_window_list_copy_window_info(kCGWindowListOptionAll, kCGNullWindowID)
+    all_windows_count = cf.cf_array_get_count(all_windows_list)
+
+    on_screen_windows_list = quartz.cg_window_list_copy_window_info(kCGWindowListOptionOnScreenOnly, kCGNullWindowID)
+    on_screen_windows_count = cf.cf_array_get_count(on_screen_windows_list)
 
     for app_index in range(app_count):
-        app = objc.objc_msgSend(running_apps, objc.sel_registerName('objectAtIndex:'), app_index)
+        app = objc.call_selector_with_arg(running_apps, 'objectAtIndex', app_index)
 
-        bid = get_string_property(app, 'bundleIdentifier')
-        pid = objc.objc_msgSend(app, objc.sel_registerName('processIdentifier'))
-
+        bid = objc.get_string_property(app, 'bundleIdentifier')
+        pid = objc.call_selector(app, 'processIdentifier')
         print("{}: {}".format(bid, pid))
 
         for all_windows_index in range(all_windows_count):
-            window = CoreFoundation.CFArrayGetValueAtIndex(all_windows_list, all_windows_index)
+            window = cf.cf_array_get_value_at_index(all_windows_list, all_windows_index)
 
-            localized_name = get_string_property(app, 'localizedName')
-            window_owner_name = get_string_dict_value(window, 'kCGWindowOwnerName')
+            localized_name = objc.get_string_property(app, 'localizedName')
+            window_owner_name = cf.get_string_dict_value(window, 'kCGWindowOwnerName')
 
             if window_owner_name == localized_name:
                 is_hidden = True
                 window_num = 0
                 for on_screen_windows_index in range(on_screen_windows_count):
-                    on_screen_window = CoreFoundation.CFArrayGetValueAtIndex(on_screen_windows_list, on_screen_windows_index)
+                    on_screen_window = cf.cf_array_get_value_at_index(on_screen_windows_list,
+                                                                      on_screen_windows_index)
 
-                    on_screen_window_num = get_int_dict_value(on_screen_window, 'kCGWindowNumber')
-                    window_num = get_int_dict_value(window, 'kCGWindowNumber')
+                    on_screen_window_num = get_int_dict_value(cf, objc, on_screen_window, 'kCGWindowNumber')
+                    window_num = get_int_dict_value(cf, objc, window, 'kCGWindowNumber')
 
                     if on_screen_window_num == window_num:
-                        is_hidden =False
+                        is_hidden = False
                         break
-                window_name = get_string_dict_value(window, 'kCGWindowName')
+
+                window_name = cf.get_string_dict_value(window, 'kCGWindowName')
                 print("     '{}':{}:{}".format(
                     window_name,
                     window_num,
                     'hidden' if is_hidden else 'maximized'))
 
-    objc.objc_msgSend(pool, objc.sel_registerName('release'))
+    objc.call_selector(pool, 'release')
+
+
+def get_int_dict_value(cf, objc, cf_dictionary_ref, key):
+    on_screen_window_num_ns = cf.cf_dictionary_get_value(cf_dictionary_ref,
+                                                         cf.unicode_to_cf_string(key))
+    on_screen_window_num = objc.call_selector(on_screen_window_num_ns, 'intValue')
+    return on_screen_window_num
+
 
 if __name__ == '__main__':
     main()
