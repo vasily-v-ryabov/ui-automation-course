@@ -1,0 +1,11 @@
+C:\Users\USER\Desktop\White\White\bin\Release\White.exe.config
+C:\Users\USER\Desktop\White\White\bin\Release\White.exe
+C:\Users\USER\Desktop\White\White\bin\Release\White.pdb
+C:\Users\USER\Desktop\White\White\bin\Release\Castle.Core.dll
+C:\Users\USER\Desktop\White\White\bin\Release\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\USER\Desktop\White\White\bin\Release\TestStack.White.dll
+C:\Users\USER\Desktop\White\White\bin\Release\Castle.Core.xml
+C:\Users\USER\Desktop\White\White\bin\Release\TestStack.White.pdb
+C:\Users\USER\Desktop\White\White\bin\Release\TestStack.White.xml
+C:\Users\USER\Desktop\White\White\obj\Release\White.exe
+C:\Users\USER\Desktop\White\White\obj\Release\White.pdb

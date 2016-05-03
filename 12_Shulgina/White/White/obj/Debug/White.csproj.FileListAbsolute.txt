@@ -1,0 +1,12 @@
+C:\Users\USER\Desktop\White\White\bin\Debug\White.exe.config
+C:\Users\USER\Desktop\White\White\bin\Debug\White.exe
+C:\Users\USER\Desktop\White\White\bin\Debug\White.pdb
+C:\Users\USER\Desktop\White\White\bin\Debug\Castle.Core.dll
+C:\Users\USER\Desktop\White\White\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\USER\Desktop\White\White\bin\Debug\TestStack.White.dll
+C:\Users\USER\Desktop\White\White\bin\Debug\Castle.Core.xml
+C:\Users\USER\Desktop\White\White\bin\Debug\TestStack.White.pdb
+C:\Users\USER\Desktop\White\White\bin\Debug\TestStack.White.xml
+C:\Users\USER\Desktop\White\White\obj\Debug\White.exe
+C:\Users\USER\Desktop\White\White\obj\Debug\White.pdb
+C:\Users\USER\Desktop\White\White\obj\Debug\White.csprojResolveAssemblyReference.cache
