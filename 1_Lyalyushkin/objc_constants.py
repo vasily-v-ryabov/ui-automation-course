@@ -1,4 +1,7 @@
-from ctypes import c_void_p, c_char_p, c_uint32, POINTER, c_long
+from ctypes import POINTER
+from ctypes import c_long
+from ctypes import c_uint32
+from ctypes import c_void_p
 
 CFIndex = c_long
 CFStringEncoding = c_uint32
@@ -21,5 +24,3 @@ kCGWindowListOptionAll = 0
 kCGWindowListOptionOnScreenOnly = (1 << 0)
 
 kCGNullWindowID = 0
-
-

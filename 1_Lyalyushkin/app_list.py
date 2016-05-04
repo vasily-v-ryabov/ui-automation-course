@@ -1,7 +1,11 @@
 from __future__ import print_function
 
-from ObjcBindings import Objc, CoreFoundation, Quartz
-from ObjcConstants import kCGNullWindowID, kCGWindowListOptionAll, kCGWindowListOptionOnScreenOnly
+from objc_bindings import CoreFoundation
+from objc_bindings import Objc
+from objc_bindings import Quartz
+from objc_constants import kCGNullWindowID
+from objc_constants import kCGWindowListOptionAll
+from objc_constants import kCGWindowListOptionOnScreenOnly
 
 
 def main():

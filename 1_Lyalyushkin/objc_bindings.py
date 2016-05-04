@@ -1,14 +1,26 @@
-import ctypes.util
+from ctypes import c_bool
 from ctypes import c_char_p
+from ctypes import c_uint32
+from ctypes import c_void_p
+from ctypes import cast
+from ctypes import cdll
+from ctypes import string_at
+from ctypes.util import find_library
 
-from ObjcConstants import CFStringRef, CFStringEncoding, CFIndex, CFAllocatorRef, CFTypeRef, \
-    CFDictionaryRef, \
-    CFErrorRef, kCFStringEncodingUTF8, CFArrayRef
+from objc_constants import CFAllocatorRef
+from objc_constants import CFArrayRef
+from objc_constants import CFDictionaryRef
+from objc_constants import CFErrorRef
+from objc_constants import CFIndex
+from objc_constants import CFStringEncoding
+from objc_constants import CFStringRef
+from objc_constants import CFTypeRef
+from objc_constants import kCFStringEncodingUTF8
 
 
 class CoreFoundation:
     def __init__(self):
-        self.__core_foundation = ctypes.cdll.LoadLibrary(ctypes.util.find_library('CoreFoundation'))
+        self.__core_foundation = cdll.LoadLibrary(find_library('CoreFoundation'))
         self.__init_core_foundation()
 
     def __init_core_foundation(self):
@@ -16,7 +28,7 @@ class CoreFoundation:
         self.__core_foundation.CFStringGetCStringPtr.restype = c_char_p
 
         self.__core_foundation.CFStringGetCString.argtypes = [CFStringRef, c_char_p, CFIndex, CFStringEncoding]
-        self.__core_foundation.CFStringGetCString.restype = ctypes.c_bool
+        self.__core_foundation.CFStringGetCString.restype = c_bool
 
         self.__core_foundation.CFStringCreateWithCString.argtypes = [CFAllocatorRef, c_char_p, CFStringEncoding]
         self.__core_foundation.CFStringCreateWithCString.restype = CFStringRef
@@ -56,7 +68,7 @@ class CoreFoundation:
 
     def cf_string_to_unicode(self, value):
         string = self.__core_foundation.CFStringGetCStringPtr(
-            ctypes.cast(value, CFStringRef),
+            cast(value, CFStringRef),
             kCFStringEncodingUTF8
         )
 
@@ -86,12 +98,12 @@ class CoreFoundation:
 
 class Quartz:
     def __init__(self):
-        self.__quartz = ctypes.cdll.LoadLibrary(ctypes.util.find_library('Quartz'))
+        self.__quartz = cdll.LoadLibrary(find_library('Quartz'))
         self.__init_quartz()
 
     def __init_quartz(self):
         self.__quartz.CGWindowListCopyWindowInfo.restype = CFArrayRef
-        self.__quartz.CGWindowListCopyWindowInfo.argtypes = [ctypes.c_uint32, ctypes.c_uint32]
+        self.__quartz.CGWindowListCopyWindowInfo.argtypes = [c_uint32, c_uint32]
         pass
 
     def cg_window_list_copy_window_info(self, option, relative_to_window):
@@ -100,14 +112,14 @@ class Quartz:
 
 class Objc:
     def __init__(self):
-        self.__objc = ctypes.cdll.LoadLibrary(ctypes.util.find_library('objc'))
+        self.__objc = cdll.LoadLibrary(find_library('objc'))
         self.__init_objc()
 
     def __init_objc(self):
-        self.__objc.objc_getClass.restype = ctypes.c_void_p
-        self.__objc.sel_registerName.restype = ctypes.c_void_p
-        self.__objc.objc_msgSend.restype = ctypes.c_void_p
-        self.__objc.objc_msgSend.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+        self.__objc.objc_getClass.restype = c_void_p
+        self.__objc.sel_registerName.restype = c_void_p
+        self.__objc.objc_msgSend.restype = c_void_p
+        self.__objc.objc_msgSend.argtypes = [c_void_p, c_void_p]
         pass
 
     def get_class(self, name):
@@ -123,5 +135,5 @@ class Objc:
         result = 'None'
         ns_string = self.__objc.objc_msgSend(obj, self.__objc.sel_registerName(property_name))
         if ns_string is not None:
-            result = ctypes.string_at(self.__objc.objc_msgSend(ns_string, self.__objc.sel_registerName('UTF8String')))
+            result = string_at(self.__objc.objc_msgSend(ns_string, self.__objc.sel_registerName('UTF8String')))
         return result
