@@ -1,0 +1,1 @@
+yadisk_automation.exe test.zip
