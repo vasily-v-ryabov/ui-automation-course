@@ -19,9 +19,10 @@ namespace WhiteNamespace
     {
         static void Main(string[] args)
         {
-            
+            string exeFolder = Directory.GetCurrentDirectory();
+            string pathToTestFile = Directory.GetParent(exeFolder).Parent.Parent.FullName;
             DriveTesting test = new DriveTesting();
-            test.run("C:\\Users\\USER\\Desktop\\White");
+            test.run(pathToTestFile);
         }
     }
 }

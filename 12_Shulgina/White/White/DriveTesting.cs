@@ -41,13 +41,21 @@ namespace WhiteNamespace
             var psi = new ProcessStartInfo
             {
                 FileName = "chrome.exe",
-                Arguments = "https://accounts.google.com/ServiceLogin?service=wise&passive=1209600&continue=https://drive.google.com/?urp%3Dhttps://www.google.ru/_/chrome/newtab?espv%253D2%2526ie%253DUT%23&followup=https://drive.google.com/?urp%3Dhttps://www.google.ru/_/chrome/newtab?espv%253D2%2526ie%253DUT&ltmpl=drive&emr=1#identifier"
+                Arguments = "--force-renderer-accessibility https://accounts.google.com/ServiceLogin?service=wise&passive=1209600&continue=https://drive.google.com/?urp%3Dhttps://www.google.ru/_/chrome/newtab?espv%253D2%2526ie%253DUT%23&followup=https://drive.google.com/?urp%3Dhttps://www.google.ru/_/chrome/newtab?espv%253D2%2526ie%253DUT&ltmpl=drive&emr=1#identifier"
             };
 
             Application appChrome = Application.Launch(psi);
             appChrome.WaitWhileBusy();
             List<Window> wins = appChrome.GetWindows();
             Window window = appChrome.GetWindows().FirstOrDefault();
+
+            Thread.Sleep(3000);
+            var link_differentAccount = window.Get<Hyperlink>(SearchCriteria.ByText("Sign in with a different account"));
+            link_differentAccount.Click();
+            Thread.Sleep(1000);
+            var link_addAccount = window.Get<Hyperlink>(SearchCriteria.ByText("Add account"));
+            link_addAccount.Click();
+            Thread.Sleep(1000);
 
             window.Keyboard.HoldKey(KeyboardInput.SpecialKeys.LWIN);
             window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.UP);
@@ -84,7 +92,14 @@ namespace WhiteNamespace
             Point startPosition = testfile.GetClickablePoint();
             Point endPosition = new Point(window.Bounds.Center().X + 50, window.Bounds.Center().Y + 50);
             drag(startPosition, endPosition);
-            appChrome.WaitWhileBusy();
+
+            Thread.Sleep(15000);
+            window.Focus();
+
+            
+           // var upload = window.Get<Label>(SearchCriteria.ByText("1 upload complete"));// fails
+            
+
         }
         private void drag(Point startPosition, Point endPosition)
         {
