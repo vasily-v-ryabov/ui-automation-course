@@ -30,6 +30,9 @@ using TestStack.White.WindowsAPI;
 using Action = TestStack.White.UIItems.Actions.Action;
 using TestStack.White.UIItems.ListBoxItems;
 
+
+
+
 namespace WhiteNamespace
 {
     [TestClass]
@@ -41,7 +44,7 @@ namespace WhiteNamespace
             var psi = new ProcessStartInfo
             {
                 FileName = "chrome.exe",
-                Arguments = "--force-renderer-accessibility https://accounts.google.com/ServiceLogin?service=wise&passive=1209600&continue=https://drive.google.com/?urp%3Dhttps://www.google.ru/_/chrome/newtab?espv%253D2%2526ie%253DUT%23&followup=https://drive.google.com/?urp%3Dhttps://www.google.ru/_/chrome/newtab?espv%253D2%2526ie%253DUT&ltmpl=drive&emr=1#identifier"
+                Arguments = "--force-renderer-accessibility --incognito https://accounts.google.com/ServiceLogin?service=wise&passive=1209600&continue=https://drive.google.com/?urp%3Dhttps://www.google.ru/_/chrome/newtab?espv%253D2%2526ie%253DUT%23&followup=https://drive.google.com/?urp%3Dhttps://www.google.ru/_/chrome/newtab?espv%253D2%2526ie%253DUT&ltmpl=drive&emr=1#identifier"
             };
 
             Application appChrome = Application.Launch(psi);
@@ -49,20 +52,9 @@ namespace WhiteNamespace
             List<Window> wins = appChrome.GetWindows();
             Window window = appChrome.GetWindows().FirstOrDefault();
 
-            Thread.Sleep(3000);
-            var link_differentAccount = window.Get<Hyperlink>(SearchCriteria.ByText("Sign in with a different account"));
-            link_differentAccount.Click();
-            Thread.Sleep(1000);
-            var link_addAccount = window.Get<Hyperlink>(SearchCriteria.ByText("Add account"));
-            link_addAccount.Click();
-            Thread.Sleep(1000);
-
             window.Keyboard.HoldKey(KeyboardInput.SpecialKeys.LWIN);
             window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.UP);
             window.Keyboard.LeaveKey(KeyboardInput.SpecialKeys.LWIN);
-
-            for (int i = 0; i < 30; i++)
-                window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.BACKSPACE);//clear textBox
 
             window.Keyboard.Enter("teststackwhitetest@gmail.com");
             window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.RETURN);
@@ -74,7 +66,9 @@ namespace WhiteNamespace
             var firstAppExp = Application.Launch("explorer.exe");//for cases when explorer has not been opened before
             firstAppExp.Process.WaitForExit();
             Application appExp = Application.Attach("explorer");
-            var windowExp = appExp.GetWindows().FirstOrDefault();
+            appExp.WaitWhileBusy();
+            var windowExp = appExp.GetWindows().Last();
+            Thread.Sleep(2000);
 
             windowExp.Keyboard.HoldKey(KeyboardInput.SpecialKeys.LWIN);
             windowExp.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.LEFT);
@@ -93,13 +87,20 @@ namespace WhiteNamespace
             Point endPosition = new Point(window.Bounds.Center().X + 50, window.Bounds.Center().Y + 50);
             drag(startPosition, endPosition);
 
-            Thread.Sleep(15000);
+            Thread.Sleep(5000);
             window.Focus();
+            window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.F5);
+            Thread.Sleep(5000);
+            try
+            {
+                var testFileItem = window.Get<ListItem>(SearchCriteria.ByText("testFile.zip Compressed Archive"));
+            }
+            catch (Exception)
+            {
+                System.Windows.Forms.MessageBox.Show("File was not uploaded");
+            }
 
             
-           // var upload = window.Get<Label>(SearchCriteria.ByText("1 upload complete"));// fails
-            
-
         }
         private void drag(Point startPosition, Point endPosition)
         {
