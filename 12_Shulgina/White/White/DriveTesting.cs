@@ -49,13 +49,14 @@ namespace WhiteNamespace
 
             Application appChrome = Application.Launch(psi);
             appChrome.WaitWhileBusy();
-            List<Window> wins = appChrome.GetWindows();
+            Thread.Sleep(2000);
             Window window = appChrome.GetWindows().FirstOrDefault();
 
             window.Keyboard.HoldKey(KeyboardInput.SpecialKeys.LWIN);
             window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.UP);
             window.Keyboard.LeaveKey(KeyboardInput.SpecialKeys.LWIN);
 
+            Thread.Sleep(1000);
             window.Keyboard.Enter("teststackwhitetest@gmail.com");
             window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.RETURN);
             Thread.Sleep(1000);
@@ -63,16 +64,23 @@ namespace WhiteNamespace
             window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.RETURN);
             Thread.Sleep(4000);
 
-            var firstAppExp = Application.Launch("explorer.exe");//for cases when explorer has not been opened before
+            
+
+            var firstAppExp = Application.Launch("explorer.exe");
             firstAppExp.Process.WaitForExit();
             Application appExp = Application.Attach("explorer");
             appExp.WaitWhileBusy();
-            var windowExp = appExp.GetWindows().Last();
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
+            var windowExp = appExp.GetWindows().FirstOrDefault();
+            Thread.Sleep(1000);
+            window.Focus();
+            Thread.Sleep(1000);
+            windowExp.Focus();
 
             windowExp.Keyboard.HoldKey(KeyboardInput.SpecialKeys.LWIN);
             windowExp.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.LEFT);
             windowExp.Keyboard.LeaveKey(KeyboardInput.SpecialKeys.LWIN);
+            Thread.Sleep(1000);
 
             var addressPane = windowExp.Get<Panel>(SearchCriteria.ByAutomationId("41477"));
             addressPane.Click();
@@ -80,6 +88,7 @@ namespace WhiteNamespace
             windowExp.Keyboard.Enter(pathToTestFile);
             windowExp.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.RETURN);
             Thread.Sleep(1000);
+
             var testfile = windowExp.GetElement(SearchCriteria.ByAutomationId("2"));
             Mouse.Instance.Location = testfile.GetClickablePoint();
             
