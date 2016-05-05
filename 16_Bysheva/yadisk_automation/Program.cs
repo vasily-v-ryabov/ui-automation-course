@@ -46,7 +46,7 @@ namespace yadisk_automation
             try
             {
                 browserWindow = AutomationElement.FromHandle(browserProcess.MainWindowHandle);
-                Utilities.PressWinAnd(Keys.Left);
+                Utilities.AlignWindowToLeft();
             }
             catch (InvalidOperationException)
             {
