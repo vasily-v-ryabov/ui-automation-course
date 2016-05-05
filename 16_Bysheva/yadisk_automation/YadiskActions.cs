@@ -60,7 +60,7 @@ namespace yadisk_automation
             try
             {
                 explorerWindow = ElementFinder.TryFindElement(AutomationElement.RootElement, Utilities.GetExplorerWindowTitle(filePath), "window", DefaultTimeout);
-                Utilities.PressWinAnd(Keys.Right);
+                Utilities.AlignWindowToRight();
 
                 ElementActions.InsertText(ElementFinder.TryFindElement(explorerWindow, "search box", "edit", DefaultTimeout), Path.GetFileName(filePath));
                 Thread.Sleep(1000);
@@ -84,11 +84,11 @@ namespace yadisk_automation
             if (browserWindow == null)
                 throw new ArgumentNullException("MonitorDownload");
 
-            //Console.WriteLine("...Please wait. Checking if file was uploaded before...");
-            
-            //var replaceButton = ElementFinder.TryFindElement(browserWindow, "заменить ", "button", TimeSpan.FromSeconds(0));
-            //if (replaceButton != null)
-            //    ElementActions.ClickElement(replaceButton);
+            Console.WriteLine("...Please wait ~2 minutes. Checking if file was uploaded before...");
+
+            var replaceButton = ElementFinder.TryFindElement(browserWindow, "заменить ", "button", TimeSpan.FromSeconds(0));
+            if (replaceButton != null)
+                ElementActions.ClickElement(replaceButton);
 
             ElementFinder.TryFindElement(browserWindow, "загрузка завершена", "text", DefaultTimeout);
 

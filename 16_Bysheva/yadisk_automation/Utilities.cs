@@ -40,6 +40,18 @@ namespace yadisk_automation
             KeyboardSend.KeyUp(Keys.LWin);
         }
 
+        public static void AlignWindowToRight()
+        {
+            Console.WriteLine("Sending WIN+RIGHT to align window to right");
+            Utilities.PressWinAnd(Keys.Right);
+        }
+
+        public static void AlignWindowToLeft()
+        {
+            Console.WriteLine("Sending WIN+LEFT to align window to left");
+            Utilities.PressWinAnd(Keys.Left);
+        }
+
         public static void RecursiveGoRound(AutomationElement parent, TreeScope treeScope, int recursionLevel = 0)
         {
             if (parent == null)
