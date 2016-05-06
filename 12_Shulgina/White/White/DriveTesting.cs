@@ -96,13 +96,14 @@ namespace WhiteNamespace
             Point endPosition = new Point(window.Bounds.Center().X + 50, window.Bounds.Center().Y + 50);
             drag(startPosition, endPosition);
 
-            Thread.Sleep(5000);
+            Thread.Sleep(40000);
             window.Focus();
             window.Keyboard.PressSpecialKey(KeyboardInput.SpecialKeys.F5);
             Thread.Sleep(5000);
             try
             {
                 var testFileItem = window.Get<ListItem>(SearchCriteria.ByText("testFile.zip Compressed Archive"));
+                System.Windows.Forms.MessageBox.Show("File was successfully uploaded");
             }
             catch (Exception)
             {
