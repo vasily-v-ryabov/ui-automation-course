@@ -57,10 +57,10 @@ def registration(window, dialog):
     create = dialog.findFirstR(AXRole="AXButton", AXIdentifier = "_NS:9")
     create.Press()
     time.sleep(10)
-    getContent(window).buttons(u"Продолжить")[0].Press()
+    getContent(window).buttons('Continue')[0].Press()
     time.sleep(5)
     getContent(window).groups()[1].groups()[3].findFirst(AXRole="AXCheckBox").Press()
-    getContent(window).buttons(u"Принять")[0].Press()
+    getContent(window).buttons('Agree')[0].Press()
     time.sleep(5)
     group = getContent(window).groups()[1]
     group.groups()[1].textFields()[0].setString("AXValue", appleID)
@@ -108,8 +108,8 @@ def registration(window, dialog):
     window.sendKey('<num_enter>')
     time.sleep(0.5)
     group.groups()[12].groups()[2].textFields()[0].setString("AXValue", year)
-    getContent(window).buttons(u"Продолжить")[0].Press()
-    time.sleep(5)
+    getContent(window).buttons('Continue')[0].Press()
+    time.sleep(7)
     group = getContent(window).groups()[1]
     group.groups()[6].groups()[0].popUpButtons()[0].Press()
     time.sleep(0.5)
@@ -125,14 +125,20 @@ def registration(window, dialog):
     group.groups()[10].groups()[0].textFields()[0].setString("AXValue", cityCode)
     group.groups()[10].groups()[1].textFields()[0].setString("AXValue", phoneNumber)
     time.sleep(0.5)
-    getContent(window).buttons(u"Создать Apple ID")[0].Press()
+    getContent(window).buttons('Create Apple ID')[0].Press()
 
 
 atomac.launchAppByBundleId('com.apple.iTunes')
 time.sleep(10)
 itunes = atomac.getAppRefByBundleId('com.apple.iTunes')
 window = itunes.windows()[0]
-window.findFirstR(AXRole = "AXStaticText", AXValue = u'Учетная запись').Press()
+
+signOut = itunes.menuItem('Account', 'Sign Out')
+if(signOut):
+    signOut.Press()
+    time.sleep(5)
+
+itunes.menuItem('Account', 1).Press()
 time.sleep(7)
 signIn(itunes.windows()[0])
 time.sleep(7)
