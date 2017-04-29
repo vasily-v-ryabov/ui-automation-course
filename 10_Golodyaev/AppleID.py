@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import atomac
 import time
 
@@ -58,10 +56,10 @@ def registration(window, dialog):
     create.Press()
     time.sleep(10)
     getContent(window).buttons('Continue')[0].Press()
-    time.sleep(5)
+    time.sleep(8)
     getContent(window).groups()[1].groups()[3].findFirst(AXRole="AXCheckBox").Press()
     getContent(window).buttons('Agree')[0].Press()
-    time.sleep(5)
+    time.sleep(8)
     group = getContent(window).groups()[1]
     group.groups()[1].textFields()[0].setString("AXValue", appleID)
     window.sendKey('<tab>')
@@ -109,7 +107,7 @@ def registration(window, dialog):
     time.sleep(0.5)
     group.groups()[12].groups()[2].textFields()[0].setString("AXValue", year)
     getContent(window).buttons('Continue')[0].Press()
-    time.sleep(7)
+    time.sleep(8)
     group = getContent(window).groups()[1]
     group.groups()[6].groups()[0].popUpButtons()[0].Press()
     time.sleep(0.5)
@@ -136,7 +134,7 @@ window = itunes.windows()[0]
 signOut = itunes.menuItem('Account', 'Sign Out')
 if(signOut):
     signOut.Press()
-    time.sleep(5)
+    time.sleep(7)
 
 itunes.menuItem('Account', 1).Press()
 time.sleep(7)
